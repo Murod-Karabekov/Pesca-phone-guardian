@@ -17,7 +17,7 @@ services:
     environment:
       DATABASE_URL: postgresql://pesca:pesca@postgres:5432/pesca_phone_guardian?schema=public
       JWT_SECRET: ${JWT_SECRET:-dev-change-me}
-      CORS_ORIGIN: http://localhost:8080,http://localhost:5173
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080,http://localhost:5173}
       SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@pesca.local}
       SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-ChangeMe123!}
     depends_on:
