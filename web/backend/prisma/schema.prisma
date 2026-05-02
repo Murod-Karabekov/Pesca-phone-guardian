@@ -1,0 +1,148 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum AdminRole {
+  SUPER_ADMIN
+  CYBER_SECURITY_AGENT
+  VIEWER
+}
+
+enum ScanReportStatus {
+  NEW
+  REVIEWING
+  SAFE
+  DANGEROUS
+  CLOSED
+}
+
+enum RiskLevel {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AppVerdict {
+  SAFE
+  SUSPICIOUS
+  DANGEROUS
+}
+
+enum NotificationType {
+  INFO
+  WARNING
+  DANGER
+}
+
+model Admin {
+  id           String    @id @default(uuid())
+  name         String
+  email        String    @unique
+  passwordHash String    @map("password_hash")
+  role         AdminRole
+  createdAt    DateTime  @default(now()) @map("created_at")
+  appReviews   AppReview[]
+}
+
+model User {
+  id             String   @id @default(uuid())
+  phoneNumber    String   @unique @map("phone_number")
+  deviceModel    String?  @map("device_model")
+  androidVersion String?  @map("android_version")
+  appVersion     String?  @map("app_version")
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  devices       Device[]
+  scanReports   ScanReport[]
+  notifications Notification[]
+}
+
+model Device {
+  id             String   @id @default(uuid())
+  userId         String   @map("user_id")
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  brand          String?
+  model          String?
+  manufacturer   String?
+  androidVersion String? @map("android_version")
+  sdkVersion     Int?    @map("sdk_version")
+  securityPatch  String? @map("security_patch")
+  deviceName     String? @map("device_name")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  installedApps InstalledApp[]
+  scanReports   ScanReport[]
+}
+
+model ScanReport {
+  id                    String           @id @default(uuid())
+  userId                String           @map("user_id")
+  user                  User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  deviceId              String           @map("device_id")
+  device                Device           @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  totalApps             Int              @map("total_apps")
+  riskyAppsCount        Int              @map("risky_apps_count")
+  highRiskAppsCount     Int              @map("high_risk_apps_count")
+  criticalRiskAppsCount Int              @map("critical_risk_apps_count")
+  overallRiskScore      Int              @map("overall_risk_score")
+  status                ScanReportStatus @default(NEW)
+  analystNote           String?          @map("analyst_note")
+  createdAt             DateTime         @default(now()) @map("created_at")
+  updatedAt             DateTime         @updatedAt @map("updated_at")
+
+  installedApps InstalledApp[]
+  appReviews    AppReview[]
+}
+
+model InstalledApp {
+  id                   String     @id @default(uuid())
+  deviceId             String     @map("device_id")
+  device               Device     @relation(fields: [deviceId], references: [id], onDelete: Cascade)
+  scanReportId         String     @map("scan_report_id")
+  scanReport           ScanReport @relation(fields: [scanReportId], references: [id], onDelete: Cascade)
+  packageName          String     @map("package_name")
+  appName              String?    @map("app_name")
+  versionName          String?    @map("version_name")
+  versionCode          Int?       @map("version_code")
+  installerPackage     String?    @map("installer_package")
+  isSystemApp          Boolean    @default(false) @map("is_system_app")
+  requestedPermissions Json?      @map("requested_permissions")
+  dangerousPermissions Json?      @map("dangerous_permissions")
+  riskScore            Int        @map("risk_score")
+  riskLevel            RiskLevel  @map("risk_level")
+  riskReasons          Json       @map("risk_reasons")
+  createdAt            DateTime   @default(now()) @map("created_at")
+
+  appReviews AppReview[]
+}
+
+model AppReview {
+  id             String       @id @default(uuid())
+  scanReportId   String       @map("scan_report_id")
+  scanReport     ScanReport   @relation(fields: [scanReportId], references: [id], onDelete: Cascade)
+  installedAppId String       @map("installed_app_id")
+  installedApp   InstalledApp @relation(fields: [installedAppId], references: [id], onDelete: Cascade)
+  analystId      String       @map("analyst_id")
+  analyst        Admin        @relation(fields: [analystId], references: [id], onDelete: Cascade)
+  verdict        AppVerdict
+  recommendation String?
+  createdAt      DateTime     @default(now()) @map("created_at")
+}
+
+model Notification {
+  id        String           @id @default(uuid())
+  userId    String           @map("user_id")
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title     String
+  message   String
+  type      NotificationType
+  isRead    Boolean          @default(false) @map("is_read")
+  createdAt DateTime         @default(now()) @map("created_at")
+}

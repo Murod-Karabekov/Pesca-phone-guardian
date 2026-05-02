@@ -1,0 +1,34 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: pesca
+      POSTGRES_PASSWORD: pesca
+      POSTGRES_DB: pesca_phone_guardian
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  api:
+    build: ./web/backend
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: postgresql://pesca:pesca@postgres:5432/pesca_phone_guardian?schema=public
+      JWT_SECRET: ${JWT_SECRET:-dev-change-me}
+      CORS_ORIGIN: http://localhost:8080,http://localhost:5173
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@pesca.local}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-ChangeMe123!}
+    depends_on:
+      - postgres
+
+  admin:
+    build: ./web/admin
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
+volumes:
+  pgdata:

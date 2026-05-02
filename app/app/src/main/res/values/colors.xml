@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_500">#6750A4</color>
+    <color name="purple_700">#4F378B</color>
+    <color name="brand_primary">#3B82F6</color>
+    <color name="brand_primary_dark">#1D4ED8</color>
+    <color name="surface_bg">#F4F7FB</color>
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#475569</color>
+    <color name="success_green">#16A34A</color>
+    <color name="danger_red">#DC2626</color>
+    <color name="warning_bg">#FEF2F2</color>
+    <color name="white">#FFFFFF</color>
+
+    <color name="scan_card_bg">#FFFFFF</color>
+    <color name="scan_text_main">#0F172A</color>
+    <color name="scan_text_muted">#64748B</color>
+    <color name="scan_text_reason">#334155</color>
+    <color name="scan_header_bg">#E0E7FF</color>
+    <color name="scan_header_text">#1E3A8A</color>
+
+    <color name="risk_chip_low_bg">#DCFCE7</color>
+    <color name="risk_chip_low_fg">#166534</color>
+    <color name="risk_chip_medium_bg">#FEF9C3</color>
+    <color name="risk_chip_medium_fg">#854D0E</color>
+    <color name="risk_chip_high_bg">#FFEDD5</color>
+    <color name="risk_chip_high_fg">#9A3412</color>
+    <color name="risk_chip_critical_bg">#FEE2E2</color>
+    <color name="risk_chip_critical_fg">#991B1B</color>
+</resources>

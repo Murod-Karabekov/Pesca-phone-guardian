@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Pesca Phone Guardian</string>
+
+    <string name="home_title">Pesca Phone Guardian himoyasi</string>
+    <string name="home_subtitle">Telefoningiz uchun xavfsizlik nazorati</string>
+    <string name="protection_on">Holat: Himoya yoqilgan</string>
+    <string name="protection_off">Holat: Himoya ochiq emas. Accessibility ni yoqing.</string>
+    <string name="open_accessibility_settings">Himoyani yoqish</string>
+    <string name="refresh_status">Qayta tekshirish</string>
+    <string name="home_help">Bu dastur sizni xavfli virus dasturlardan himoya qiladi va ogohlantiradi.</string>
+    <string name="home_steps_title">Qanday ishlaydi?</string>
+    <string name="home_steps">1) Himoyani yoqing. 2) APK ochilganda avtomatik ogohlantirish chiqadi. 3) Chiqish tugmasi orqali o\u2019rnatishni bekor qiling.</string>
+
+    <string name="accessibility_service_label">Phone Guardian Accessibility</string>
+    <string name="accessibility_service_description">APK o\u2019rnatish jarayonini kuzatadi va ogohlantirish beradi.</string>
+
+    <string name="warning_title">Diqqat!</string>
+    <string name="warning_message">Sizning ma\u2019lumotlaringiz xavf ostida. Bu dasturni o\u2019rnatmang.</string>
+    <string name="close_warning">Chiqish</string>
+
+    <string name="nav_scan">Tekshiruv</string>
+    <string name="nav_notifications">Xabarlar</string>
+    <string name="scan_title">O\u2019rnatilgan dasturlar</string>
+    <string name="submit_cyber_review">Cyber Security tekshiruviga yuborish</string>
+    <string name="uninstall_app">Sozlamalarda o\u2019chirish</string>
+    <string name="uninstall_not_supported">Ilova sozlamalari ochilmadi. Qo\u2019lda: Sozlamalar → Ilovalar.</string>
+    <string name="notifications_title">Ogohlantirishlar</string>
+    <string name="phone_hint">Mobil raqam</string>
+    <string name="phone_helper">Ixtiyoriy. Bo\u2019sh qoldirsangiz, anonim ID yuboriladi. To\u2019ldirsangiz: 99 1234567 yoki +998\u2026 avtomatik tartiblanadi.</string>
+    <string name="submit_server_switch">Serverga yuborish</string>
+    <string name="submit_dialog_intro">Dasturlar ro\u2019yxati va xavf baholari serverda saqlanishi uchun yoqing. O\u2019chiq bo\u2019lsa, faqat qurilmada qoladi.</string>
+    <string name="submit_local_only">Mahalliy rejim: serverga yuborilmadi.</string>
+    <string name="section_risky">Xavfli yoki shubhali</string>
+    <string name="section_remaining">Qolgan dasturlar</string>
+    <string name="section_all">Barcha dasturlar</string>
+    <string name="scan_no_reasons">\u2014</string>
+    <string name="consent_title">Rozilik</string>
+    <string name="consent_message">Siz telefoningiz modeli, Android versiyasi, o\u2019rnatilgan dasturlar ro\u2019yxati va xavfsizlik tahlili ma\u2019lumotlarini tekshiruv uchun yuborishga rozimisiz?</string>
+    <string name="send">Yuborish</string>
+    <string name="cancel">Bekor</string>
+    <string name="phone_partial_error">Raqamni to\u2019liq kiriting yoki o\u2019chiring (anonim).</string>
+    <string name="submit_ok">Ma\u2019lumotlar yuborildi</string>
+    <string name="submit_fail">Yuborishda xato</string>
+    <string name="risk_disclaimer">Bu ball taxminiy tahlildir. 100% virus yoki xavfsizlik kafolati emas.</string>
+    <string name="scan_risk_line">Taxminiy ball: %1$d / 100</string>
+    <string name="notifications_need_phone">Avval Tekshiruvda serverga yuborishni bajarishingiz kerak (telefon yoki anonim).</string>
+</resources>

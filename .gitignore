@@ -19,3 +19,13 @@ Thumbs.db
 
 # Logs
 *.log
+
+# Web / Node
+web/**/node_modules/
+web/**/dist/
+web/**/.next/
+web/**/build/
+.env
+!.env.example
+web/**/.env
+!web/**/.env.example
