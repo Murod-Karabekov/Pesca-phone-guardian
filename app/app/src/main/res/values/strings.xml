@@ -9,9 +9,6 @@
     <string name="open_accessibility_settings">Himoyani yoqish</string>
     <string name="refresh_status">Qayta tekshirish</string>
     <string name="home_help">Bu dastur sizni xavfli virus dasturlardan himoya qiladi va ogohlantiradi.</string>
-    <string name="home_steps_title">Qanday ishlaydi?</string>
-    <string name="home_steps">1) Himoyani yoqing. 2) APK ochilganda avtomatik ogohlantirish chiqadi. 3) Chiqish tugmasi orqali o\u2019rnatishni bekor qiling.</string>
-
     <string name="accessibility_service_label">Phone Guardian Accessibility</string>
     <string name="accessibility_service_description">APK o\u2019rnatish jarayonini kuzatadi va ogohlantirish beradi.</string>
 
@@ -42,6 +39,8 @@
     <string name="phone_partial_error">Raqamni to\u2019liq kiriting yoki o\u2019chiring (anonim).</string>
     <string name="submit_ok">Ma\u2019lumotlar yuborildi</string>
     <string name="submit_fail">Yuborishda xato</string>
+    <string name="submit_fail_server">Server vaqtincha javob bermadi. Keyinroq urinib ko\u2018ring.</string>
+    <string name="submit_payload_too_large">Yuboriladigan ma\u2019lumot hajmi katta. Iltimos, ilova va serverni yangilang (VDS: API qayta ishga tushiring).</string>
     <string name="risk_disclaimer">Bu ball taxminiy tahlildir. 100% virus yoki xavfsizlik kafolati emas.</string>
     <string name="scan_risk_line">Taxminiy ball: %1$d / 100</string>
     <string name="notifications_need_phone">Avval Tekshiruvda serverga yuborishni bajarishingiz kerak (telefon yoki anonim).</string>

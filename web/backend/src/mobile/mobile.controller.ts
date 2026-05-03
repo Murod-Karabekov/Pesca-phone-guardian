@@ -1,4 +1,13 @@
-import { Body, Controller, Get, Param, Post, UsePipes, ValidationPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Query,
+  UsePipes,
+  ValidationPipe,
+} from '@nestjs/common';
 import { MobileService } from './mobile.service';
 import {
   MobileNotificationReadDto,
@@ -10,6 +19,12 @@ import {
 @UsePipes(new ValidationPipe({ whitelist: true, transform: true }))
 export class MobileController {
   constructor(private readonly mobile: MobileService) {}
+
+  @Get('ads')
+  ads(@Query('placement') placement?: string) {
+    const p = placement === 'NOTIFICATIONS_FOOTER' ? 'NOTIFICATIONS_FOOTER' : 'HOME_MAIN';
+    return this.mobile.listActiveAds(p);
+  }
 
   @Post('register')
   register(@Body() dto: MobileRegisterDto) {

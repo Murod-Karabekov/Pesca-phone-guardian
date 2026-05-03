@@ -1,10 +1,12 @@
 import { Type } from 'class-transformer';
 import {
+  IsBoolean,
   IsEnum,
   IsIn,
   IsInt,
   IsOptional,
   IsString,
+  Matches,
   Min,
 } from 'class-validator';
 import {
@@ -82,4 +84,70 @@ export class NotifyUserDto {
 
   @IsEnum(NotificationType)
   type!: NotificationType;
+}
+
+const HTTP_URL_RE = /^https?:\/\/.+/;
+
+export class AdsQueryDto {
+  @IsOptional()
+  @IsIn(['HOME_MAIN', 'NOTIFICATIONS_FOOTER'])
+  placement?: string;
+}
+
+export class CreateAdvertisementDto {
+  @IsIn(['HOME_MAIN', 'NOTIFICATIONS_FOOTER'])
+  placement!: 'HOME_MAIN' | 'NOTIFICATIONS_FOOTER';
+
+  @IsOptional()
+  @IsString()
+  title?: string;
+
+  @IsOptional()
+  @IsString()
+  @Matches(HTTP_URL_RE, { message: 'imageUrl must be http(s)' })
+  imageUrl?: string;
+
+  @IsString()
+  @Matches(HTTP_URL_RE, { message: 'linkUrl must be http(s)' })
+  linkUrl!: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  sortOrder?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
+}
+
+export class PatchAdvertisementDto {
+  @IsOptional()
+  @IsIn(['HOME_MAIN', 'NOTIFICATIONS_FOOTER'])
+  placement?: 'HOME_MAIN' | 'NOTIFICATIONS_FOOTER';
+
+  @IsOptional()
+  @IsString()
+  title?: string;
+
+  @IsOptional()
+  @IsString()
+  @Matches(HTTP_URL_RE, { message: 'imageUrl must be http(s)' })
+  imageUrl?: string;
+
+  @IsOptional()
+  @IsString()
+  @Matches(HTTP_URL_RE, { message: 'linkUrl must be http(s)' })
+  linkUrl?: string;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsInt()
+  @Min(0)
+  sortOrder?: number;
+
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
 }

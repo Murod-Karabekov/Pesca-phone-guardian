@@ -177,4 +177,18 @@ export class MobileService {
     });
     return { ok: true };
   }
+
+  listActiveAds(placement: string) {
+    return this.prisma.advertisement.findMany({
+      where: { placement, isActive: true },
+      orderBy: { sortOrder: 'asc' },
+      select: {
+        id: true,
+        placement: true,
+        title: true,
+        imageUrl: true,
+        linkUrl: true,
+      },
+    });
+  }
 }

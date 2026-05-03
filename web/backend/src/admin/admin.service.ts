@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { Prisma, RiskLevel, ScanReportStatus } from '@prisma/client';
 import { PrismaService } from '../prisma/prisma.service';
+import type { CreateAdvertisementDto, PatchAdvertisementDto } from './dto/admin.dto';
 
 @Injectable()
 export class AdminService {
@@ -174,5 +175,43 @@ export class AdminService {
     return this.prisma.notification.create({
       data: { userId, title, message, type },
     });
+  }
+
+  async listAdvertisements(placement?: string) {
+    const where = placement ? { placement } : {};
+    return this.prisma.advertisement.findMany({
+      where,
+      orderBy: [{ placement: 'asc' }, { sortOrder: 'asc' }, { createdAt: 'desc' }],
+    });
+  }
+
+  async createAdvertisement(data: CreateAdvertisementDto) {
+    return this.prisma.advertisement.create({
+      data: {
+        placement: data.placement,
+        title: data.title,
+        imageUrl: data.imageUrl?.trim() || null,
+        linkUrl: data.linkUrl.trim(),
+        sortOrder: data.sortOrder ?? 0,
+        isActive: data.isActive ?? true,
+      },
+    });
+  }
+
+  async updateAdvertisement(id: string, dto: PatchAdvertisementDto) {
+    await this.prisma.advertisement.findUniqueOrThrow({ where: { id } });
+    const data: Prisma.AdvertisementUpdateInput = {};
+    if (dto.placement !== undefined) data.placement = dto.placement;
+    if (dto.title !== undefined) data.title = dto.title || null;
+    if (dto.imageUrl !== undefined) data.imageUrl = dto.imageUrl?.trim() || null;
+    if (dto.linkUrl !== undefined) data.linkUrl = dto.linkUrl.trim();
+    if (dto.sortOrder !== undefined) data.sortOrder = dto.sortOrder;
+    if (dto.isActive !== undefined) data.isActive = dto.isActive;
+    return this.prisma.advertisement.update({ where: { id }, data });
+  }
+
+  async deleteAdvertisement(id: string) {
+    await this.prisma.advertisement.delete({ where: { id } });
+    return { ok: true };
   }
 }

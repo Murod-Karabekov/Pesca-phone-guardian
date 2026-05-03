@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.pesca.phoneguardian.R
+import com.pesca.phoneguardian.ads.AdsBinder
 import com.pesca.phoneguardian.api.ApiClient
 import com.pesca.phoneguardian.api.NotificationReadRequest
 import com.pesca.phoneguardian.databinding.ActivityNotificationsBinding
@@ -51,6 +52,12 @@ class NotificationsActivity : AppCompatActivity() {
                             }
                         }
                     }
+                }
+                try {
+                    val ads = ApiClient.mobile.listAds("NOTIFICATIONS_FOOTER")
+                    AdsBinder.populate(binding.adsNotificationsContainer, ads, layoutInflater)
+                } catch (_: Exception) {
+                    binding.adsNotificationsContainer.removeAllViews()
                 }
             } catch (_: Exception) {
                 Toast.makeText(this@NotificationsActivity, R.string.submit_fail, Toast.LENGTH_SHORT).show()

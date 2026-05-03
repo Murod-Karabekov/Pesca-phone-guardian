@@ -72,3 +72,11 @@ data class NotificationDto(
     @SerializedName("isRead") val isRead: Boolean,
     @SerializedName("createdAt") val createdAt: String,
 )
+
+data class AdDto(
+    @SerializedName("id") val id: String,
+    @SerializedName("placement") val placement: String,
+    @SerializedName("title") val title: String?,
+    @SerializedName("imageUrl") val imageUrl: String?,
+    @SerializedName("linkUrl") val linkUrl: String,
+)

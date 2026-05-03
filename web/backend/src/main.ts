@@ -1,10 +1,14 @@
-import { NestFactory } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
+import { NestFactory } from '@nestjs/core';
+import * as express from 'express';
 import helmet from 'helmet';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { rawBody: false });
+  const app = await NestFactory.create(AppModule, { rawBody: false, bodyParser: false });
+  const httpApp = app.getHttpAdapter().getInstance() as express.Application;
+  httpApp.use(express.json({ limit: '32mb' }));
+  httpApp.use(express.urlencoded({ extended: true, limit: '32mb' }));
   app.setGlobalPrefix('api');
   app.use(helmet());
   app.useGlobalPipes(

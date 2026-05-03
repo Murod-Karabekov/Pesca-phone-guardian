@@ -12,6 +12,7 @@ export default function ShellLayout() {
         <NavLink to="/users">Users</NavLink>
         <NavLink to="/devices">Devices</NavLink>
         <NavLink to="/reports">Scan reports</NavLink>
+        <NavLink to="/ads">Reklamalar</NavLink>
         <button
           className="btn secondary"
           style={{ marginTop: 24, width: '100%' }}

@@ -1,6 +1,7 @@
 package com.pesca.phoneguardian.scan
 
 import android.os.Build
+import android.util.Log
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -25,6 +26,7 @@ import com.pesca.phoneguardian.util.UzbekPhoneFormatter
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 
 class ScanActivity : AppCompatActivity() {
 
@@ -200,7 +202,22 @@ class ScanActivity : AppCompatActivity() {
                 )
                 Toast.makeText(this@ScanActivity, R.string.submit_ok, Toast.LENGTH_LONG).show()
             } catch (e: Exception) {
-                Toast.makeText(this@ScanActivity, R.string.submit_fail, Toast.LENGTH_LONG).show()
+                if (BuildConfig.DEBUG) {
+                    Log.e("PhoneGuardian", "submit failed: ${e.message}", e)
+                    if (e is HttpException) {
+                        val snippet = runCatching { e.response()?.errorBody()?.string() }.getOrNull()?.take(200)
+                        Log.e("PhoneGuardian", "HTTP ${e.code()} body: $snippet")
+                    }
+                }
+                val msg = when (e) {
+                    is HttpException -> when (e.code()) {
+                        413 -> getString(R.string.submit_payload_too_large)
+                        in 500..599 -> getString(R.string.submit_fail_server)
+                        else -> getString(R.string.submit_fail)
+                    }
+                    else -> getString(R.string.submit_fail)
+                }
+                Toast.makeText(this@ScanActivity, msg, Toast.LENGTH_LONG).show()
             }
         }
     }

@@ -36,7 +36,11 @@ export default function UserDetailPage() {
     <div>
       <h1>User {user.phoneNumber}</h1>
       <div className="card">
-        <h3>Send in-app notification</h3>
+        <h3>Ilovaga xabar (Xabarlar bo‘limi)</h3>
+        <p style={{ color: 'var(--muted)', fontSize: 13, marginBottom: 12 }}>
+          Yuborilgach, foydalanuvchi ilovada «Xabarlar» bo‘limida ko‘radi (telefon/anonim ID bilan ro‘yxatdan
+          o‘tgan bo‘lishi kerak).
+        </p>
         <input className="input" placeholder="Title" value={title} onChange={(e) => setTitle(e.target.value)} />
         <div style={{ height: 8 }} />
         <textarea

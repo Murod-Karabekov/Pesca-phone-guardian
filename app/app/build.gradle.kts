@@ -1,3 +1,4 @@
+import java.net.URI
 import java.util.Properties
 
 plugins {
@@ -12,9 +13,53 @@ val localProps = Properties().apply {
 val apiBaseUrl = (localProps.getProperty("API_BASE_URL") ?: "http://10.0.2.2:3000/api/").trim()
     .let { if (it.endsWith("/")) it else "$it/" }
 
+/** HTTP API_BASE_URL bo'lsa, Android cleartext uchun shu host qo'shiladi (VDS IP va hokazo). */
+fun httpCleartextHost(url: String): String? =
+    runCatching {
+        val u = URI(url.trim())
+        if (!u.scheme.equals("http", ignoreCase = true)) return null
+        val h = u.host ?: return null
+        if (!h.matches(Regex("^[a-zA-Z0-9.:\\-]+$"))) return null
+        h
+    }.getOrNull()
+
+val cleartextHostFromApi: String? = httpCleartextHost(apiBaseUrl)
+
+val generateNetworkSecurityConfig = tasks.register("generateNetworkSecurityConfig") {
+    val outFile = layout.buildDirectory.file("generated/network-security/res/xml/network_security_config.xml")
+    outputs.file(outFile)
+    inputs.property("cleartextHost", cleartextHostFromApi ?: "")
+    inputs.property("apiBaseUrl", apiBaseUrl)
+
+    doLast {
+        val out = outFile.get().asFile
+        out.parentFile.mkdirs()
+        out.writeText(
+            buildString {
+                appendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>")
+                appendLine("<network-security-config>")
+                appendLine("    <domain-config cleartextTrafficPermitted=\"true\">")
+                appendLine("        <domain includeSubdomains=\"true\">10.0.2.2</domain>")
+                appendLine("        <domain includeSubdomains=\"true\">localhost</domain>")
+                appendLine("        <domain includeSubdomains=\"true\">127.0.0.1</domain>")
+                cleartextHostFromApi?.let { h ->
+                    appendLine("        <domain includeSubdomains=\"false\">$h</domain>")
+                }
+                appendLine("    </domain-config>")
+                appendLine("    <debug-overrides>")
+                appendLine("        <base-config cleartextTrafficPermitted=\"true\" />")
+                appendLine("    </debug-overrides>")
+                appendLine("</network-security-config>")
+            },
+        )
+    }
+}
+
 android {
     namespace = "com.pesca.phoneguardian"
     compileSdk = 35
+
+    sourceSets.getByName("main").res.srcDir(layout.buildDirectory.dir("generated/network-security/res"))
 
     defaultConfig {
         applicationId = "com.pesca.phoneguardian"
@@ -37,7 +82,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
         }
     }
@@ -52,6 +97,10 @@ android {
     }
 }
 
+afterEvaluate {
+    tasks.named("preBuild").configure { dependsOn(generateNetworkSecurityConfig) }
+}
+
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.appcompat:appcompat:1.7.0")
@@ -64,4 +113,5 @@ dependencies {
     implementation("com.squareup.retrofit2:retrofit:2.11.0")
     implementation("com.squareup.retrofit2:converter-gson:2.11.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation("io.coil-kt:coil:2.7.0")
 }

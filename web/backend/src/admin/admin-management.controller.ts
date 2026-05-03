@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Patch,
@@ -17,7 +18,10 @@ import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RolesGuard } from './guards/roles.guard';
 import { AdminService } from './admin.service';
 import {
+  AdsQueryDto,
+  CreateAdvertisementDto,
   NotifyUserDto,
+  PatchAdvertisementDto,
   PatchReportStatusDto,
   ReportsQueryDto,
   ReviewAppDto,
@@ -93,5 +97,29 @@ export class AdminManagementController {
   @Roles(AdminRole.SUPER_ADMIN, AdminRole.CYBER_SECURITY_AGENT)
   notify(@Param('id') id: string, @Body() dto: NotifyUserDto) {
     return this.admin.notifyUser(id, dto.title, dto.message, dto.type);
+  }
+
+  @Get('ads')
+  @Roles(AdminRole.SUPER_ADMIN, AdminRole.CYBER_SECURITY_AGENT, AdminRole.VIEWER)
+  listAds(@Query() q: AdsQueryDto) {
+    return this.admin.listAdvertisements(q.placement);
+  }
+
+  @Post('ads')
+  @Roles(AdminRole.SUPER_ADMIN, AdminRole.CYBER_SECURITY_AGENT)
+  createAd(@Body() dto: CreateAdvertisementDto) {
+    return this.admin.createAdvertisement(dto);
+  }
+
+  @Patch('ads/:id')
+  @Roles(AdminRole.SUPER_ADMIN, AdminRole.CYBER_SECURITY_AGENT)
+  patchAd(@Param('id') id: string, @Body() dto: PatchAdvertisementDto) {
+    return this.admin.updateAdvertisement(id, dto);
+  }
+
+  @Delete('ads/:id')
+  @Roles(AdminRole.SUPER_ADMIN, AdminRole.CYBER_SECURITY_AGENT)
+  deleteAd(@Param('id') id: string) {
+    return this.admin.deleteAdvertisement(id);
   }
 }

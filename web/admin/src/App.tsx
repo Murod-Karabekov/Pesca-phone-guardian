@@ -7,6 +7,7 @@ import UserDetailPage from './pages/UserDetailPage';
 import DevicesPage from './pages/DevicesPage';
 import ReportsPage from './pages/ReportsPage';
 import ReportDetailPage from './pages/ReportDetailPage';
+import AdsPage from './pages/AdsPage';
 
 function Private({ children }: { children: React.ReactNode }) {
   const t = localStorage.getItem('ppg_token');
@@ -32,6 +33,7 @@ export default function App() {
         <Route path="devices" element={<DevicesPage />} />
         <Route path="reports" element={<ReportsPage />} />
         <Route path="reports/:id" element={<ReportDetailPage />} />
+        <Route path="ads" element={<AdsPage />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>

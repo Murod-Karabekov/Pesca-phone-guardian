@@ -30,3 +30,11 @@ export async function apiPatch<T>(path: string, body: unknown): Promise<T> {
   if (!res.ok) throw new Error(await res.text());
   return res.json() as Promise<T>;
 }
+
+export async function apiDelete(path: string): Promise<void> {
+  const res = await fetch(`${API}${path}`, {
+    method: 'DELETE',
+    headers: { ...authHeader() },
+  });
+  if (!res.ok) throw new Error(await res.text());
+}
