@@ -27,11 +27,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import retrofit2.HttpException
+import java.util.Locale
 
 class ScanActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityScanBinding
     private var items: List<ScannedApp> = emptyList()
+
+    // Serverga faqat com.android.vending dan tashqari manbadan o‘rnatilgan ilovalar (backend PLAY_STORE bilan mos).
+    private fun appsForServerUpload(all: List<ScannedApp>): List<ScannedApp> =
+        all.filter { app ->
+            val inst = app.installerPackage?.trim()?.lowercase(Locale.ROOT).orEmpty()
+            inst != PLAY_STORE_INSTALLER
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -169,7 +177,7 @@ class ScanActivity : AppCompatActivity() {
                     securityPatch = Build.VERSION.SECURITY_PATCH,
                     deviceName = Build.DEVICE,
                 )
-                val apps = items.map {
+                val apps = appsForServerUpload(items).map {
                     InstalledAppPayload(
                         packageName = it.packageName,
                         appName = it.appLabel,
@@ -220,5 +228,9 @@ class ScanActivity : AppCompatActivity() {
                 Toast.makeText(this@ScanActivity, msg, Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+    private companion object {
+        private const val PLAY_STORE_INSTALLER = "com.android.vending"
     }
 }

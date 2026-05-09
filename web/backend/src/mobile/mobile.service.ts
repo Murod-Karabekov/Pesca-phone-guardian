@@ -121,23 +121,25 @@ export class MobileService {
       },
     });
 
-    await this.prisma.installedApp.createMany({
-      data: scored.map((s) => ({
-        deviceId: device.id,
-        scanReportId: report.id,
-        packageName: s.input.packageName,
-        appName: s.input.appName,
-        versionName: s.input.versionName,
-        versionCode: s.input.versionCode ?? null,
-        installerPackage: s.input.installerPackage ?? null,
-        isSystemApp: s.input.isSystemApp,
-        requestedPermissions: s.input.requestedPermissions as object,
-        dangerousPermissions: s.input.dangerousPermissions as object,
-        riskScore: s.riskScore,
-        riskLevel: s.riskLevel,
-        riskReasons: s.riskReasons as object,
-      })),
-    });
+    if (scored.length > 0) {
+      await this.prisma.installedApp.createMany({
+        data: scored.map((s) => ({
+          deviceId: device.id,
+          scanReportId: report.id,
+          packageName: s.input.packageName,
+          appName: s.input.appName,
+          versionName: s.input.versionName,
+          versionCode: s.input.versionCode ?? null,
+          installerPackage: s.input.installerPackage ?? null,
+          isSystemApp: s.input.isSystemApp,
+          requestedPermissions: s.input.requestedPermissions as object,
+          dangerousPermissions: s.input.dangerousPermissions as object,
+          riskScore: s.riskScore,
+          riskLevel: s.riskLevel,
+          riskReasons: s.riskReasons as object,
+        })),
+      });
+    }
 
     const appsOut = scored.map((s) => ({
       packageName: s.input.packageName,
