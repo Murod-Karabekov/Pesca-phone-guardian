@@ -34,11 +34,14 @@ class ScanActivity : AppCompatActivity() {
     private lateinit var binding: ActivityScanBinding
     private var items: List<ScannedApp> = emptyList()
 
-    // Serverga faqat com.android.vending dan tashqari manbadan o‘rnatilgan ilovalar (backend PLAY_STORE bilan mos).
+    // Serverga faqat xavfi 50 va undan yuqori bo'lgan ilovalarni jo'natamiz.
+    // Past xavfli ilovalar local ko'rsatiladi, lekin backendga yuborilmaydi.
     private fun appsForServerUpload(all: List<ScannedApp>): List<ScannedApp> =
         all.filter { app ->
             val inst = app.installerPackage?.trim()?.lowercase(Locale.ROOT).orEmpty()
-            inst != PLAY_STORE_INSTALLER
+            val isHighRisk = app.localRiskScore >= 50
+            val isNotPlayStore = inst != PLAY_STORE_INSTALLER
+            isHighRisk && isNotPlayStore
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
