@@ -2,7 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { RiskLevel } from '@prisma/client';
 
 const PLAY_STORE = 'com.android.vending';
-const TRUSTED_INSTALLERS = new Set([PLAY_STORE]);
+const TRUSTED_INSTALLERS = new Set([
+  PLAY_STORE,
+  'com.sec.android.app.samsungapps',
+  'com.google.android.packageinstaller',
+  'com.android.packageinstaller',
+]);
 
 export type AppRiskInput = {
   packageName: string;
@@ -30,60 +35,54 @@ export class RiskScoringService {
       ),
     );
 
-    const installer = input.installerPackage?.trim() || null;
-    const fromPlay = installer === PLAY_STORE;
+    const installer = input.installerPackage?.trim().toLowerCase() || null;
+    const fromTrustedInstaller = installer !== null && TRUSTED_INSTALLERS.has(installer);
+    const trustedApp = input.isSystemApp || fromTrustedInstaller;
 
-    if (!fromPlay) {
-      score += 25;
+    if (input.isSystemApp) {
+      reasons.push('System app (trusted baseline)');
+    } else if (fromTrustedInstaller) {
+      reasons.push('Trusted installer (Google Play or Galaxy Store)');
+    } else {
+      score += 50;
       reasons.push('App not installed from Google Play');
+      if (installer === null) reasons.push('Unknown or missing installer source');
     }
-    if (installer === null || installer === '') {
-      score += 25;
-      reasons.push('Unknown or missing installer source');
-    }
-    if (perms.has('android.permission.SEND_SMS') || perms.has('android.permission.RECEIVE_SMS')) {
+    if (!trustedApp && (perms.has('ANDROID.PERMISSION.SEND_SMS') || perms.has('ANDROID.PERMISSION.RECEIVE_SMS'))) {
       score += 20;
       reasons.push('SMS-related permission requested');
     }
     if (
-      perms.has('android.permission.BIND_ACCESSIBILITY_SERVICE') ||
+      !trustedApp && (perms.has('ANDROID.PERMISSION.BIND_ACCESSIBILITY_SERVICE') ||
       input.packageName.toLowerCase().includes('accessibility')
+      )
     ) {
       score += 25;
       reasons.push('Accessibility-related capability or permission');
     }
-    if (perms.has('android.permission.SYSTEM_ALERT_WINDOW')) {
+    if (!trustedApp && perms.has('ANDROID.PERMISSION.SYSTEM_ALERT_WINDOW')) {
       score += 20;
       reasons.push('Overlay (SYSTEM_ALERT_WINDOW) permission');
     }
-    if (perms.has('android.permission.READ_CONTACTS')) {
+    if (!trustedApp && perms.has('ANDROID.PERMISSION.READ_CONTACTS')) {
       score += 10;
       reasons.push('READ_CONTACTS permission');
     }
-    if (perms.has('android.permission.RECORD_AUDIO')) {
+    if (!trustedApp && perms.has('ANDROID.PERMISSION.RECORD_AUDIO')) {
       score += 10;
       reasons.push('RECORD_AUDIO permission');
     }
-    if (perms.has('android.permission.CAMERA')) {
+    if (!trustedApp && perms.has('ANDROID.PERMISSION.CAMERA')) {
       score += 8;
       reasons.push('CAMERA permission');
     }
-    if (perms.has('android.permission.READ_PHONE_STATE')) {
+    if (!trustedApp && perms.has('ANDROID.PERMISSION.READ_PHONE_STATE')) {
       score += 10;
       reasons.push('READ_PHONE_STATE permission');
     }
-    if (perms.has('android.permission.REQUEST_INSTALL_PACKAGES')) {
+    if (!trustedApp && perms.has('ANDROID.PERMISSION.REQUEST_INSTALL_PACKAGES')) {
       score += 25;
       reasons.push('REQUEST_INSTALL_PACKAGES permission');
-    }
-
-    if (input.isSystemApp) {
-      score -= 20;
-      reasons.push('System app (reduced baseline risk)');
-    }
-    if (installer && TRUSTED_INSTALLERS.has(installer)) {
-      score -= 20;
-      reasons.push('Trusted installer (Google Play)');
     }
 
     score = Math.max(0, Math.min(100, Math.round(score)));
