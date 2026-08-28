@@ -42,21 +42,9 @@ object LocalRiskEngine {
             score += 25
             reasons.add("Accessibility bilan bog'liq ruxsat")
         }
-        if (!trustedApp && perms.contains("ANDROID.PERMISSION.SYSTEM_ALERT_WINDOW")) {
-            score += 20
-            reasons.add("Overlay (SYSTEM_ALERT_WINDOW) ruxsati")
-        }
         if (!trustedApp && perms.contains("ANDROID.PERMISSION.READ_CONTACTS")) {
             score += 10
             reasons.add("READ_CONTACTS ruxsati")
-        }
-        if (!trustedApp && perms.contains("ANDROID.PERMISSION.READ_PHONE_STATE")) {
-            score += 10
-            reasons.add("READ_PHONE_STATE ruxsati")
-        }
-        if (!trustedApp && perms.contains("ANDROID.PERMISSION.REQUEST_INSTALL_PACKAGES")) {
-            score += 25
-            reasons.add("REQUEST_INSTALL_PACKAGES ruxsati")
         }
         score = score.coerceIn(0, 100)
         val level = when {

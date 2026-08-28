@@ -60,21 +60,9 @@ export class RiskScoringService {
       score += 25;
       reasons.push('Accessibility-related capability or permission');
     }
-    if (!trustedApp && perms.has('ANDROID.PERMISSION.SYSTEM_ALERT_WINDOW')) {
-      score += 20;
-      reasons.push('Overlay (SYSTEM_ALERT_WINDOW) permission');
-    }
     if (!trustedApp && perms.has('ANDROID.PERMISSION.READ_CONTACTS')) {
       score += 10;
       reasons.push('READ_CONTACTS permission');
-    }
-    if (!trustedApp && perms.has('ANDROID.PERMISSION.READ_PHONE_STATE')) {
-      score += 10;
-      reasons.push('READ_PHONE_STATE permission');
-    }
-    if (!trustedApp && perms.has('ANDROID.PERMISSION.REQUEST_INSTALL_PACKAGES')) {
-      score += 25;
-      reasons.push('REQUEST_INSTALL_PACKAGES permission');
     }
 
     score = Math.max(0, Math.min(100, Math.round(score)));
