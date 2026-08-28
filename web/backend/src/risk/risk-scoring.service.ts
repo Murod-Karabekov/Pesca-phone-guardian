@@ -68,14 +68,6 @@ export class RiskScoringService {
       score += 10;
       reasons.push('READ_CONTACTS permission');
     }
-    if (!trustedApp && perms.has('ANDROID.PERMISSION.RECORD_AUDIO')) {
-      score += 10;
-      reasons.push('RECORD_AUDIO permission');
-    }
-    if (!trustedApp && perms.has('ANDROID.PERMISSION.CAMERA')) {
-      score += 8;
-      reasons.push('CAMERA permission');
-    }
     if (!trustedApp && perms.has('ANDROID.PERMISSION.READ_PHONE_STATE')) {
       score += 10;
       reasons.push('READ_PHONE_STATE permission');

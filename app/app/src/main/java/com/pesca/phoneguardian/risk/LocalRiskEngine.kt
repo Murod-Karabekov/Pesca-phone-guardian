@@ -50,14 +50,6 @@ object LocalRiskEngine {
             score += 10
             reasons.add("READ_CONTACTS ruxsati")
         }
-        if (!trustedApp && perms.contains("ANDROID.PERMISSION.RECORD_AUDIO")) {
-            score += 10
-            reasons.add("RECORD_AUDIO ruxsati")
-        }
-        if (!trustedApp && perms.contains("ANDROID.PERMISSION.CAMERA")) {
-            score += 8
-            reasons.add("CAMERA ruxsati")
-        }
         if (!trustedApp && perms.contains("ANDROID.PERMISSION.READ_PHONE_STATE")) {
             score += 10
             reasons.add("READ_PHONE_STATE ruxsati")
